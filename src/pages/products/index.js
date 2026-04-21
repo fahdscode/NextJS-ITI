@@ -97,7 +97,9 @@ export default function ProductsPage({
       const exists = current.find((item) => item.id === product.id);
       if (exists) {
         return current.map((item) =>
-          item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item,
+          item.id === product.id
+            ? { ...item, quantity: item.quantity + 1 }
+            : item,
         );
       }
 
@@ -304,7 +306,11 @@ export default function ProductsPage({
               <Link className="btn" href={`/products/${product.id}`}>
                 View
               </Link>
-              <button className="btn primary" type="button" onClick={() => addToCart(product)}>
+              <button
+                className="btn primary"
+                type="button"
+                onClick={() => addToCart(product)}
+              >
                 Add To Cart
               </button>
               <button

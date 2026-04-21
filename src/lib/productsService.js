@@ -23,7 +23,9 @@ async function requestJson(url, options = {}) {
   const data = body ? JSON.parse(body) : null;
 
   if (!response.ok) {
-    const error = new Error(data?.message || `Request failed (${response.status})`);
+    const error = new Error(
+      data?.message || `Request failed (${response.status})`,
+    );
     error.status = response.status;
     throw error;
   }
@@ -81,9 +83,12 @@ export async function getProducts(filters = {}) {
     if (filters.brand) params.set("brand", filters.brand);
     if (filters.category) params.set("category", filters.category);
 
-    const fallback = await requestJson(`${DUMMY_BASE_URL}/products?${params.toString()}`, {
-      cache: "no-store",
-    });
+    const fallback = await requestJson(
+      `${DUMMY_BASE_URL}/products?${params.toString()}`,
+      {
+        cache: "no-store",
+      },
+    );
     return (fallback.products || []).map(normalizeProduct);
   }
 }
@@ -184,7 +189,9 @@ export async function buyProducts(items = []) {
     productId: { $in: normalizedItems.map((item) => item.id) },
   });
 
-  const itemsMap = new Map(products.map((product) => [product.productId, product]));
+  const itemsMap = new Map(
+    products.map((product) => [product.productId, product]),
+  );
   const orderItems = [];
 
   for (const item of normalizedItems) {
@@ -232,7 +239,9 @@ export async function buyProducts(items = []) {
 export async function deleteProduct(id) {
   await connectDB();
 
-  const deleted = await Product.findOneAndDelete({ productId: Number(id) }).lean();
+  const deleted = await Product.findOneAndDelete({
+    productId: Number(id),
+  }).lean();
   if (!deleted) {
     const notFound = new Error("Product not found");
     notFound.status = 404;
