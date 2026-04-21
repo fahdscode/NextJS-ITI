@@ -15,17 +15,18 @@ export default function App({ Component, pageProps }) {
       <header className="app-header">
         <nav className="nav-wrap">
           <Link href="/" className="nav-logo">
-            Fahd's Store
+            Fahd&apos;s Store
           </Link>
           <div className="nav-links">
             <Link href="/products">Products</Link>
+            <Link href="/news">News</Link>
           </div>
         </nav>
       </header>
       <main className="page-container">
         <Component {...pageProps} />
       </main>
-      <footer className="app-footer">Fahd's Code Prod.</footer>
+      <footer className="app-footer">Fahd&apos;s Code Prod.</footer>
     </div>
   );
 }

@@ -15,6 +15,7 @@ export default function ProductDetailsPage({ product }) {
     rating: String(product.rating),
   });
   const [status, setStatus] = useState("");
+  const [totalPrice, setTotalPrice] = useState(null);
 
   async function handleUpdate(event) {
     event.preventDefault();
@@ -32,13 +33,28 @@ export default function ProductDetailsPage({ product }) {
     });
 
     if (!response.ok) {
-      setStatus(
-        "Update failed. Make sure json-server is running on port 3001.",
-      );
+      setStatus("Update failed. Check MongoDB connection and MONGODB_URI.");
       return;
     }
 
     setStatus("Product updated successfully.");
+  }
+
+  async function handleBuyOne() {
+    const response = await fetch("/api/orders/buy", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ items: [{ id: product.id, quantity: 1 }] }),
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+      setStatus(data.message || "Buy failed.");
+      return;
+    }
+
+    setTotalPrice(data.totalPrice);
+    setStatus(`Order ${data.orderId} created.`);
   }
 
   return (
@@ -59,9 +75,13 @@ export default function ProductDetailsPage({ product }) {
           <h1>{product.title}</h1>
           <p>Product ID: {product.id}</p>
           <p>
-            This page is statically generated using getStaticPaths +
+            This page is generated using ISR with getStaticPaths +
             getStaticProps.
           </p>
+          <button className="btn primary" type="button" onClick={handleBuyOne}>
+            Buy This Product
+          </button>
+          {totalPrice !== null ? <p>Total Price: ${totalPrice}</p> : null}
 
           <form onSubmit={handleUpdate}>
             <div className="edit-grid">

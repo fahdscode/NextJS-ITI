@@ -12,6 +12,8 @@ export default function ProductsPage({
   const [brand, setBrand] = useState("");
   const [category, setCategory] = useState("");
   const [status, setStatus] = useState("");
+  const [cart, setCart] = useState([]);
+  const [lastTotal, setLastTotal] = useState(null);
   const [form, setForm] = useState({
     title: "",
     description: "",
@@ -60,9 +62,7 @@ export default function ProductsPage({
     });
 
     if (!response.ok) {
-      setStatus(
-        "Create failed. Make sure json-server is running on port 3001.",
-      );
+      setStatus("Create failed. Check MongoDB connection and MONGODB_URI.");
       return;
     }
 
@@ -84,9 +84,7 @@ export default function ProductsPage({
   async function handleDelete(id) {
     const response = await fetch(`/api/products/${id}`, { method: "DELETE" });
     if (!response.ok) {
-      setStatus(
-        "Delete failed. Make sure json-server is running on port 3001.",
-      );
+      setStatus("Delete failed. Check MongoDB connection and MONGODB_URI.");
       return;
     }
 
@@ -94,11 +92,57 @@ export default function ProductsPage({
     setStatus(`Product ${id} deleted.`);
   }
 
+  function addToCart(product) {
+    setCart((current) => {
+      const exists = current.find((item) => item.id === product.id);
+      if (exists) {
+        return current.map((item) =>
+          item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item,
+        );
+      }
+
+      return [
+        ...current,
+        {
+          id: product.id,
+          title: product.title,
+          price: Number(product.price || 0),
+          quantity: 1,
+        },
+      ];
+    });
+  }
+
+  async function handleBuyCart() {
+    if (!cart.length) {
+      setStatus("Add products to cart first.");
+      return;
+    }
+
+    const response = await fetch("/api/orders/buy", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        items: cart.map((item) => ({ id: item.id, quantity: item.quantity })),
+      }),
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+      setStatus(data.message || "Checkout failed.");
+      return;
+    }
+
+    setLastTotal(data.totalPrice);
+    setStatus(`Order ${data.orderId} created successfully.`);
+    setCart([]);
+  }
+
   return (
     <section>
-      <h1>Products (SSG)</h1>
+      <h1>Products (ISR)</h1>
       <p>
-        Data is statically fetched, then filtered and edited through API routes.
+        Data is generated with ISR and managed through Node + Mongoose APIs.
       </p>
 
       <form className="toolbar" onSubmit={applyFilter}>
@@ -219,6 +263,24 @@ export default function ProductsPage({
         </button>
       </form>
 
+      <section className="create-form">
+        <h2>Buy Products</h2>
+        <p>Cart items: {cart.length}</p>
+        {cart.length ? (
+          <ul>
+            {cart.map((item) => (
+              <li key={item.id}>
+                {item.title} x {item.quantity}
+              </li>
+            ))}
+          </ul>
+        ) : null}
+        <button className="btn primary" type="button" onClick={handleBuyCart}>
+          Buy Cart
+        </button>
+        {lastTotal !== null ? <p>Total Price: ${lastTotal}</p> : null}
+      </section>
+
       {status ? <p>{status}</p> : null}
 
       {!hasProducts ? <p>No products found for current filter.</p> : null}
@@ -242,6 +304,9 @@ export default function ProductsPage({
               <Link className="btn" href={`/products/${product.id}`}>
                 View
               </Link>
+              <button className="btn primary" type="button" onClick={() => addToCart(product)}>
+                Add To Cart
+              </button>
               <button
                 className="btn danger"
                 type="button"
