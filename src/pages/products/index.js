@@ -3,7 +3,11 @@ import Link from "next/link";
 import { useMemo, useState } from "react";
 import { getProducts } from "@/lib/productsService";
 
-export default function ProductsPage({ initialProducts, brandOptions, categoryOptions }) {
+export default function ProductsPage({
+  initialProducts,
+  brandOptions,
+  categoryOptions,
+}) {
   const [products, setProducts] = useState(initialProducts);
   const [brand, setBrand] = useState("");
   const [category, setCategory] = useState("");
@@ -56,7 +60,9 @@ export default function ProductsPage({ initialProducts, brandOptions, categoryOp
     });
 
     if (!response.ok) {
-      setStatus("Create failed. Make sure json-server is running on port 3001.");
+      setStatus(
+        "Create failed. Make sure json-server is running on port 3001.",
+      );
       return;
     }
 
@@ -78,7 +84,9 @@ export default function ProductsPage({ initialProducts, brandOptions, categoryOp
   async function handleDelete(id) {
     const response = await fetch(`/api/products/${id}`, { method: "DELETE" });
     if (!response.ok) {
-      setStatus("Delete failed. Make sure json-server is running on port 3001.");
+      setStatus(
+        "Delete failed. Make sure json-server is running on port 3001.",
+      );
       return;
     }
 
@@ -89,10 +97,15 @@ export default function ProductsPage({ initialProducts, brandOptions, categoryOp
   return (
     <section>
       <h1>Products (SSG)</h1>
-      <p>Data is statically fetched, then filtered and edited through API routes.</p>
+      <p>
+        Data is statically fetched, then filtered and edited through API routes.
+      </p>
 
       <form className="toolbar" onSubmit={applyFilter}>
-        <select value={brand} onChange={(event) => setBrand(event.target.value)}>
+        <select
+          value={brand}
+          onChange={(event) => setBrand(event.target.value)}
+        >
           <option value="">Filter by brand</option>
           {brandOptions.map((value) => (
             <option key={value} value={value}>
@@ -101,7 +114,10 @@ export default function ProductsPage({ initialProducts, brandOptions, categoryOp
           ))}
         </select>
 
-        <select value={category} onChange={(event) => setCategory(event.target.value)}>
+        <select
+          value={category}
+          onChange={(event) => setCategory(event.target.value)}
+        >
           <option value="">Filter by category</option>
           {categoryOptions.map((value) => (
             <option key={value} value={value}>
@@ -125,31 +141,41 @@ export default function ProductsPage({ initialProducts, brandOptions, categoryOp
         <div className="create-grid">
           <input
             value={form.title}
-            onChange={(event) => setForm((f) => ({ ...f, title: event.target.value }))}
+            onChange={(event) =>
+              setForm((f) => ({ ...f, title: event.target.value }))
+            }
             placeholder="Title"
             required
           />
           <input
             value={form.thumbnail}
-            onChange={(event) => setForm((f) => ({ ...f, thumbnail: event.target.value }))}
+            onChange={(event) =>
+              setForm((f) => ({ ...f, thumbnail: event.target.value }))
+            }
             placeholder="Thumbnail URL"
             required
           />
           <input
             value={form.brand}
-            onChange={(event) => setForm((f) => ({ ...f, brand: event.target.value }))}
+            onChange={(event) =>
+              setForm((f) => ({ ...f, brand: event.target.value }))
+            }
             placeholder="Brand"
             required
           />
           <input
             value={form.category}
-            onChange={(event) => setForm((f) => ({ ...f, category: event.target.value }))}
+            onChange={(event) =>
+              setForm((f) => ({ ...f, category: event.target.value }))
+            }
             placeholder="Category"
             required
           />
           <input
             value={form.price}
-            onChange={(event) => setForm((f) => ({ ...f, price: event.target.value }))}
+            onChange={(event) =>
+              setForm((f) => ({ ...f, price: event.target.value }))
+            }
             placeholder="Price"
             type="number"
             min="0"
@@ -157,7 +183,9 @@ export default function ProductsPage({ initialProducts, brandOptions, categoryOp
           />
           <input
             value={form.stock}
-            onChange={(event) => setForm((f) => ({ ...f, stock: event.target.value }))}
+            onChange={(event) =>
+              setForm((f) => ({ ...f, stock: event.target.value }))
+            }
             placeholder="Stock"
             type="number"
             min="0"
@@ -165,7 +193,9 @@ export default function ProductsPage({ initialProducts, brandOptions, categoryOp
           />
           <input
             value={form.rating}
-            onChange={(event) => setForm((f) => ({ ...f, rating: event.target.value }))}
+            onChange={(event) =>
+              setForm((f) => ({ ...f, rating: event.target.value }))
+            }
             placeholder="Rating"
             type="number"
             min="0"
@@ -176,7 +206,9 @@ export default function ProductsPage({ initialProducts, brandOptions, categoryOp
           <textarea
             className="full"
             value={form.description}
-            onChange={(event) => setForm((f) => ({ ...f, description: event.target.value }))}
+            onChange={(event) =>
+              setForm((f) => ({ ...f, description: event.target.value }))
+            }
             placeholder="Description"
             rows={3}
             required
@@ -210,7 +242,11 @@ export default function ProductsPage({ initialProducts, brandOptions, categoryOp
               <Link className="btn" href={`/products/${product.id}`}>
                 View
               </Link>
-              <button className="btn danger" type="button" onClick={() => handleDelete(product.id)}>
+              <button
+                className="btn danger"
+                type="button"
+                onClick={() => handleDelete(product.id)}
+              >
                 Delete
               </button>
             </div>
@@ -224,8 +260,12 @@ export default function ProductsPage({ initialProducts, brandOptions, categoryOp
 export async function getStaticProps() {
   const products = await getProducts();
 
-  const brandOptions = [...new Set(products.map((product) => product.brand))].sort();
-  const categoryOptions = [...new Set(products.map((product) => product.category))].sort();
+  const brandOptions = [
+    ...new Set(products.map((product) => product.brand)),
+  ].sort();
+  const categoryOptions = [
+    ...new Set(products.map((product) => product.category)),
+  ].sort();
 
   return {
     props: {

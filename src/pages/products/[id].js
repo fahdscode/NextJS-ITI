@@ -32,7 +32,9 @@ export default function ProductDetailsPage({ product }) {
     });
 
     if (!response.ok) {
-      setStatus("Update failed. Make sure json-server is running on port 3001.");
+      setStatus(
+        "Update failed. Make sure json-server is running on port 3001.",
+      );
       return;
     }
 
@@ -46,42 +48,60 @@ export default function ProductDetailsPage({ product }) {
       </p>
       <div className="product-detail">
         <div className="image-frame">
-          <Image src={form.thumbnail} alt={form.title} fill sizes="(max-width: 768px) 100vw, 300px" />
+          <Image
+            src={form.thumbnail}
+            alt={form.title}
+            fill
+            sizes="(max-width: 768px) 100vw, 300px"
+          />
         </div>
         <div className="edit-form">
           <h1>{product.title}</h1>
           <p>Product ID: {product.id}</p>
-          <p>This page is statically generated using getStaticPaths + getStaticProps.</p>
+          <p>
+            This page is statically generated using getStaticPaths +
+            getStaticProps.
+          </p>
 
           <form onSubmit={handleUpdate}>
             <div className="edit-grid">
               <input
                 value={form.title}
-                onChange={(event) => setForm((f) => ({ ...f, title: event.target.value }))}
+                onChange={(event) =>
+                  setForm((f) => ({ ...f, title: event.target.value }))
+                }
                 placeholder="Title"
                 required
               />
               <input
                 value={form.thumbnail}
-                onChange={(event) => setForm((f) => ({ ...f, thumbnail: event.target.value }))}
+                onChange={(event) =>
+                  setForm((f) => ({ ...f, thumbnail: event.target.value }))
+                }
                 placeholder="Thumbnail URL"
                 required
               />
               <input
                 value={form.brand}
-                onChange={(event) => setForm((f) => ({ ...f, brand: event.target.value }))}
+                onChange={(event) =>
+                  setForm((f) => ({ ...f, brand: event.target.value }))
+                }
                 placeholder="Brand"
                 required
               />
               <input
                 value={form.category}
-                onChange={(event) => setForm((f) => ({ ...f, category: event.target.value }))}
+                onChange={(event) =>
+                  setForm((f) => ({ ...f, category: event.target.value }))
+                }
                 placeholder="Category"
                 required
               />
               <input
                 value={form.price}
-                onChange={(event) => setForm((f) => ({ ...f, price: event.target.value }))}
+                onChange={(event) =>
+                  setForm((f) => ({ ...f, price: event.target.value }))
+                }
                 placeholder="Price"
                 type="number"
                 min="0"
@@ -89,7 +109,9 @@ export default function ProductDetailsPage({ product }) {
               />
               <input
                 value={form.stock}
-                onChange={(event) => setForm((f) => ({ ...f, stock: event.target.value }))}
+                onChange={(event) =>
+                  setForm((f) => ({ ...f, stock: event.target.value }))
+                }
                 placeholder="Stock"
                 type="number"
                 min="0"
@@ -97,7 +119,9 @@ export default function ProductDetailsPage({ product }) {
               />
               <input
                 value={form.rating}
-                onChange={(event) => setForm((f) => ({ ...f, rating: event.target.value }))}
+                onChange={(event) =>
+                  setForm((f) => ({ ...f, rating: event.target.value }))
+                }
                 placeholder="Rating"
                 type="number"
                 min="0"
@@ -108,7 +132,9 @@ export default function ProductDetailsPage({ product }) {
               <textarea
                 className="full"
                 value={form.description}
-                onChange={(event) => setForm((f) => ({ ...f, description: event.target.value }))}
+                onChange={(event) =>
+                  setForm((f) => ({ ...f, description: event.target.value }))
+                }
                 placeholder="Description"
                 rows={4}
                 required

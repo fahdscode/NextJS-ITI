@@ -5,8 +5,8 @@ export default function Home() {
     <section className="home-section">
       <h1>Products Dashboard</h1>
       <p>
-        Explore products, filter by brand/category, and perform full CRUD operations
-        backed by json-server.
+        Explore products, filter by brand/category, and perform full CRUD
+        operations backed by json-server.
       </p>
       <HomeComponent />
     </section>
